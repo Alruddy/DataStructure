@@ -6,7 +6,6 @@
 #include <algorithm>
 using namespace std;
 
-
 struct TreeNode
 {
 	int val;
@@ -193,6 +192,33 @@ void PostOrder_N(TreeNode *root, void(*visit)(int val)) {
 	}
 }
 
+void PostOrder_N_1(TreeNode *root, void(*visit)(int val)) {
+	if (root == nullptr) {
+		return;
+	}
+	TreeNode *pre = nullptr;
+	TreeNode *cur = root;
+	stack<TreeNode*> s;
+	s.push(cur);
+	while (!s.empty()) {
+		cur = s.top();
+		if ((cur->lchild == nullptr && cur->rchild == nullptr) ||
+			(pre != nullptr && (pre == cur->lchild || pre == cur->rchild))) {
+			s.pop();
+			visit(cur->val);
+			pre = cur;
+		}
+		else {
+			if (cur->rchild) {
+				s.push(cur->rchild);
+			}
+			if (cur->lchild) {
+				s.push(cur->lchild);
+			}
+		}
+	}
+}
+
 
 int VisitNodeAtLevel(TreeNode *root, int level, void(*visit)(int val)) {
 	if (root == nullptr || level < 0) {
@@ -242,7 +268,7 @@ int main()
 	istream_iterator<int> int_it(in);
 	istream_iterator<int> int_end;
 	root = createTree(int_it, int_end, root);
-	cout << "二叉树遍历" << endl << endl;
+    cout << "二叉树遍历" << endl << endl;;
 	cout << "递归版先序遍历: " << endl;
 	PreOrder(root, visit); cout << endl;
 	cout << "非递归版先序遍历1: " << endl;
@@ -257,8 +283,10 @@ int main()
 	InOrder_N_1(root, visit); cout << endl << endl;
 	cout << "递归版后序遍历: " << endl;
 	PostOrder(root, visit); cout << endl;
-	cout << "非递归版后序遍历:" << endl;
-	PostOrder_N(root, visit); cout << endl << endl;
+	cout << "非递归版后序遍历1:" << endl;
+	PostOrder_N(root, visit); cout << endl;
+	cout << "非递归版后序遍历2:" << endl;
+	PostOrder_N_1(root, visit); cout << endl << endl;
 	cout << "非递归版层序遍历: " << endl;
 	LevelOrder_N(root, visit); cout << endl;
 	cout << "递归版层序遍历: " << endl;
